@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "elephant_stm32",
+			"path": "src/elephant_robot/elephant_stm32"
+		},
+		{
+			"name": "rabbit_stm32",
+			"path": "src/rabbit_robot/rabbit_stm32"
+		}
+	],
+	"settings": {
+		"python.autoComplete.extraPaths": [
+			"/opt/ros/noetic/lib/python3/dist-packages"
+		]
+	}
+}
