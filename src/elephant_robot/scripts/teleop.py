@@ -1,0 +1,48 @@
+#!/usr/bin/env python3
+import rospy
+from geometry_msgs.msg import Twist
+
+import sys
+from select import select
+import termios
+import tty
+
+moveBindings = {
+    '': (0, 0, 0),
+    'w': (2500*2, 2500*2, 0),
+    'a': (2500*2, -2500*2, 0),
+    's': (-2500*2, -2500*2, 0),
+    'd': (-2500*2, 2500*2, 0,),
+    'q': (0, 0, 2500*2),
+    'e': (0, 0, -2500*2),
+}
+
+
+def getKey(settings, timeout):
+    tty.setraw(sys.stdin.fileno())
+    # sys.stdin.read() returns a string on Linux
+    rlist, _, _ = select([sys.stdin], [], [], timeout)
+    if rlist:
+        key = sys.stdin.read(1)
+    else:
+        key = ''
+    termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
+    return key
+
+
+if __name__ == '__main__':
+    rospy.init_node('teleop')
+    rospy.loginfo('Node started')
+
+    pub = rospy.Publisher('/elephant/cmd_vel', Twist, queue_size=10)
+
+    rate = rospy.Rate(50)
+    while not rospy.is_shutdown():
+        key = getKey(termios.tcgetattr(sys.stdin), 0.5)
+        if (key == '\x03'):
+            break
+        twist = Twist()
+        if key in moveBindings:
+            twist.linear.x, twist.linear.y, twist.angular.z = moveBindings[key]
+        pub.publish(twist)
+        rate.sleep()
