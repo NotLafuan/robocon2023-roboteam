@@ -2,37 +2,44 @@
 
 // #define USE_USBCON
 // #include <ros.h>
-// #include <std_msgs/String.h>
-// #include <ArduinoHardware.h>
-
-// // ~/robocon2023-roboteam/src/elephant_robot/elephant_stm32/.pio/libdeps/black_f407ve/Rosserial Arduino Library/src/ArduinoHardware.h
-// // replace `Serial_` -> `USBSerial`
-
-// // rosrun rosserial_python serial_node.py /dev/ttyACM0
+// #include <std_msgs/Int16.h>
+// #include <config.h>
+// #include <encoder.h>
 
 // ros::NodeHandle nh;
 
-// std_msgs::String str_msg;
-// ros::Publisher chatter("chatter", &str_msg);
+// std_msgs::Int16 enc_msg1;
+// std_msgs::Int16 enc_msg2;
+// ros::Publisher pub1("pub1", &enc_msg1);
+// ros::Publisher pub2("pub2", &enc_msg2);
 
-// char hello[13] = "hello world!";
+// // volatile int Encoder::value;
+// Encoder encoder1(ENCODER1A, ENCODER1B);
+// Encoder encoder2(ENCODER2A, ENCODER2B);
+
+// void encoderUpdate();
 
 // void setup()
 // {
-//   // SerialUSB.begin(57600);
-//   // nh.getHardware()->setBaud(57600);
-//   nh.initNode();
-//   nh.advertise(chatter);
-//   pinMode(PA1, OUTPUT);
+//     // SerialUSB.begin(57600);
+//     // nh.getHardware()->setBaud(57600);
+//     nh.initNode();
+//     nh.advertise(pub1);
+//     nh.advertise(pub2);
+//     attachInterrupt(digitalPinToInterrupt(ENCODER1A), encoderUpdate, CHANGE);
+//     attachInterrupt(digitalPinToInterrupt(ENCODER1B), encoderUpdate, CHANGE);
 // }
 
 // void loop()
 // {
-//   str_msg.data = hello;
-//   chatter.publish(&str_msg);
-//   nh.spinOnce();
-//   delay(1000);
-//   digitalWrite(PA1, HIGH);
-//   delay(1000);
-//   digitalWrite(PA1, LOW);
+//     enc_msg1.data = encoder1.get_value();
+//     pub1.publish(&enc_msg1);
+//     pub2.publish(&enc_msg2);
+//     nh.spinOnce();
+//     delay(20);
+// }
+
+// void encoderUpdate()
+// {
+//     encoder1.encoderUpdate();
 // }

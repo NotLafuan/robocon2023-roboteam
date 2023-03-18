@@ -9,7 +9,7 @@ def cmd_vel_callback(twist: Twist):
     rospy.loginfo(f'{twist.linear.x}, {twist.linear.y}, {twist.angular.z}')
     r = 1
     R = 1
-    theta = 1
+    theta = 0
     w1 = (1 / r) * (-sin(theta + (1 * pi / 4)) * twist.linear.x + cos(theta + (1 * pi / 4)) * twist.linear.y + R * twist.angular.z)
     w2 = (1 / r) * (-sin(theta + (3 * pi / 4)) * twist.linear.x + cos(theta + (3 * pi / 4)) * twist.linear.y + R * twist.angular.z)
     w3 = (1 / r) * (-sin(theta + (5 * pi / 4)) * twist.linear.x + cos(theta + (5 * pi / 4)) * twist.linear.y + R * twist.angular.z)
