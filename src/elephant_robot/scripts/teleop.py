@@ -9,10 +9,10 @@ import tty
 
 moveBindings = {
     '': (0, 0, 0),
-    'w': (2500*2, 0, 0),
-    'a': (0, -2500*2, 0),
-    's': (-2500*2, 0, 0),
-    'd': (0, 2500*2, 0,),
+    'w': (2500*4, 0, 0),
+    'a': (0, 2500*4, 0,),
+    's': (-2500*4, 0, 0),
+    'd': (0, -2500*4, 0),
     'q': (0, 0, 2500*2),
     'e': (0, 0, -2500*2),
 }
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     rate = rospy.Rate(50)
     while not rospy.is_shutdown():
-        key = getKey(termios.tcgetattr(sys.stdin), 0.5)
+        key = getKey(termios.tcgetattr(sys.stdin), 0.1)
         if (key == '\x03'):
             break
         twist = Twist()

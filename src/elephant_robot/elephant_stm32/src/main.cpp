@@ -3,9 +3,11 @@
 #define USE_USBCON
 #include <ros.h>
 #include <std_msgs/Int16.h>
+#include <std_msgs/Float32.h>
 #include <config.h>
 #include <motor.h>
 #include <encoder.h>
+#include <hmc5883l.h>
 
 ros::NodeHandle nh;
 
@@ -33,11 +35,22 @@ void encoder1Update();
 void encoder2Update();
 
 std_msgs::Int16 enc_msg;
-ros::Publisher pub1("encoder1", &enc_msg);
-ros::Publisher pub2("encoder2", &enc_msg);
+ros::Publisher encPub1("encoder1", &enc_msg);
+ros::Publisher encPub2("encoder2", &enc_msg);
+
+///////// COMPASS /////////
+HMC5883L hmc5883l;
+
+std_msgs::Float32 hmc_msg;
+ros::Publisher anglePub("angle", &hmc_msg);
 
 void setup()
 {
+    Wire.setSCL(SCL_PIN);
+    Wire.setSDA(SDA_PIN);
+    Wire.setClock(400000);
+    Wire.begin();
+    delay(250);
     nh.initNode();
     // motor
     nh.subscribe(sub1);
@@ -46,22 +59,30 @@ void setup()
     nh.subscribe(sub4);
     analogWriteResolution(16);
     // encoder
-    nh.advertise(pub1);
-    nh.advertise(pub2);
+    nh.advertise(encPub1);
+    nh.advertise(encPub2);
     attachInterrupt(digitalPinToInterrupt(ENCODER1A), encoder1Update, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ENCODER1B), encoder1Update, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ENCODER2A), encoder2Update, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ENCODER2B), encoder2Update, CHANGE);
+    // compass
+    nh.advertise(anglePub);
+    hmc5883l.begin();
 }
 
 void loop()
 {
     nh.spinOnce();
 
+    // encoder
     enc_msg.data = encoder1.get_value();
-    pub1.publish(&enc_msg);
+    encPub1.publish(&enc_msg);
     enc_msg.data = encoder2.get_value();
-    pub2.publish(&enc_msg);
+    encPub2.publish(&enc_msg);
+    // compass
+    hmc5883l.update();
+    hmc_msg.data = hmc5883l.get_heading();
+    anglePub.publish(&hmc_msg);
 
     delay(20);
 }

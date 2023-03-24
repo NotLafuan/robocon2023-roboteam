@@ -13,3 +13,6 @@
 #define ENCODER2B  PD3
 #define ENCODER3A  PD4
 #define ENCODER3B  PD5
+
+#define SCL_PIN  PB6
+#define SDA_PIN  PB7
