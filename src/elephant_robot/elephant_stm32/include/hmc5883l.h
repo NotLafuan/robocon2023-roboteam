@@ -4,7 +4,6 @@
 class HMC5883L
 {
 private:
-    int scl, sda;
     int16_t x, y, z;
     double heading;
 

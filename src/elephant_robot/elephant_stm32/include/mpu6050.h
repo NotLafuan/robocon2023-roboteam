@@ -4,11 +4,10 @@
 class MPU6050
 {
 private:
-    int scl, sda;
     int16_t x, y, z;
 
 public:
-    MPU6050(int, int);
+    MPU6050();
     ~MPU6050();
     void begin();
     void update();
@@ -17,10 +16,8 @@ public:
     int get_z();
 };
 
-MPU6050::MPU6050(int scl, int sda)
+MPU6050::MPU6050()
 {
-    this->scl = scl;
-    this->sda = sda;
 }
 
 MPU6050::~MPU6050()
