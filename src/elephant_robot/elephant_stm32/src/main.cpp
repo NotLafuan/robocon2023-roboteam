@@ -1,11 +1,11 @@
 // #include <Arduino.h>
 
-// #define USE_USBCON
-// #include <ros.h>
-// #include <std_msgs/Int16.h>
-// #include <config.h>
-// #include <motor.h>
-// #include <encoder.h>
+#define USE_USBCON
+#include <ros.h>
+#include <std_msgs/Int16.h>
+#include <config.h>
+#include <motor.h>
+#include <encoder.h>
 
 // ros::NodeHandle nh;
 
@@ -32,36 +32,36 @@
 // void encoder1Update();
 // void encoder2Update();
 
-// std_msgs::Int16 enc_msg;
-// ros::Publisher pub1("encoder1", &enc_msg);
-// ros::Publisher pub2("encoder2", &enc_msg);
+std_msgs::Int16 enc_msg;
+ros::Publisher pub1("encoder1", &enc_msg);
+ros::Publisher pub2("encoder2", &enc_msg);
 
-// void setup()
-// {
-//     nh.initNode();
-//     // motor
-//     nh.subscribe(sub1);
-//     nh.subscribe(sub2);
-//     nh.subscribe(sub3);
-//     nh.subscribe(sub4);
-//     analogWriteResolution(16);
-//     // encoder
-//     nh.advertise(pub1);
-//     nh.advertise(pub2);
-//     attachInterrupt(digitalPinToInterrupt(ENCODER1A), encoder1Update, CHANGE);
-//     attachInterrupt(digitalPinToInterrupt(ENCODER1B), encoder1Update, CHANGE);
-//     attachInterrupt(digitalPinToInterrupt(ENCODER2A), encoder2Update, CHANGE);
-//     attachInterrupt(digitalPinToInterrupt(ENCODER2B), encoder2Update, CHANGE);
-// }
+void setup()
+{
+    nh.initNode();
+    // motor
+    nh.subscribe(sub1);
+    nh.subscribe(sub2);
+    nh.subscribe(sub3);
+    nh.subscribe(sub4);
+    analogWriteResolution(16);
+    // encoder
+    nh.advertise(pub1);
+    nh.advertise(pub2);
+    attachInterrupt(digitalPinToInterrupt(ENCODER1A), encoder1Update, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCODER1B), encoder1Update, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCODER2A), encoder2Update, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCODER2B), encoder2Update, CHANGE);
+}
 
 // void loop()
 // {
 //     nh.spinOnce();
 
-//     enc_msg.data = encoder1.get_value();
-//     pub1.publish(&enc_msg);
-//     enc_msg.data = encoder2.get_value();
-//     pub2.publish(&enc_msg);
+    enc_msg.data = encoder1.get_value();
+    pub1.publish(&enc_msg);
+    enc_msg.data = encoder2.get_value();
+    pub2.publish(&enc_msg);
 
 //     delay(20);
 // }

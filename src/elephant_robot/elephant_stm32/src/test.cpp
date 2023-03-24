@@ -2,44 +2,42 @@
 
 // #define USE_USBCON
 // #include <ros.h>
-// #include <std_msgs/Int16.h>
+// #include <geometry_msgs/Vector3.h>
+// #include <std_msgs/Float32.h>
 // #include <config.h>
-// #include <encoder.h>
-
+// // #include <mpu6050.h>
+// #include <hmc5883l.h>
 // ros::NodeHandle nh;
 
-// std_msgs::Int16 enc_msg1;
-// std_msgs::Int16 enc_msg2;
-// ros::Publisher pub1("pub1", &enc_msg1);
-// ros::Publisher pub2("pub2", &enc_msg2);
+// // geometry_msgs::Vector3 mpu_msg;
+// std_msgs::Float32 hmc_msg;
+// ros::Publisher pub1("angle", &hmc_msg);
 
-// // volatile int Encoder::value;
-// Encoder encoder1(ENCODER1A, ENCODER1B);
-// Encoder encoder2(ENCODER2A, ENCODER2B);
+// // MPU6050 mpu6050(MPU_SCL, MPU_SDA);
+// HMC5883L hmc5883l(HMC_SCL, HMC_SDA);
 
 // void encoderUpdate();
 
 // void setup()
 // {
+//     // mag.begin();
 //     // SerialUSB.begin(57600);
 //     // nh.getHardware()->setBaud(57600);
 //     nh.initNode();
 //     nh.advertise(pub1);
-//     nh.advertise(pub2);
-//     attachInterrupt(digitalPinToInterrupt(ENCODER1A), encoderUpdate, CHANGE);
-//     attachInterrupt(digitalPinToInterrupt(ENCODER1B), encoderUpdate, CHANGE);
+//     // mpu6050.begin();
+//     hmc5883l.begin();
 // }
 
 // void loop()
 // {
-//     enc_msg1.data = encoder1.get_value();
-//     pub1.publish(&enc_msg1);
-//     pub2.publish(&enc_msg2);
+//     hmc5883l.update();
+//     // hmc_msg.x = hmc5883l.get_x();
+//     // hmc_msg.y = hmc5883l.get_y();
+//     // hmc_msg.z = hmc5883l.get_z();
+//     // hmc_msg.data = hmc5883l.get_heading();
+//     hmc_msg.data = hmc5883l.get_heading();
+//     pub1.publish(&hmc_msg);
 //     nh.spinOnce();
 //     delay(20);
-// }
-
-// void encoderUpdate()
-// {
-//     encoder1.encoderUpdate();
 // }
