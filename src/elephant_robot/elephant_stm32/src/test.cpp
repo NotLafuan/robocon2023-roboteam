@@ -1,43 +1,45 @@
-// #include <Arduino.h>
+#include <Arduino.h>
+#include <config.h>
+#include <motor.h>
+#include <encoder.h>
 
-// #define USE_USBCON
-// #include <ros.h>
-// #include <geometry_msgs/Vector3.h>
-// #include <std_msgs/Float32.h>
-// #include <config.h>
-// // #include <mpu6050.h>
-// #include <hmc5883l.h>
-// ros::NodeHandle nh;
+// 11.5
+// 11
+// 10.5
+// 10.75
 
-// // geometry_msgs::Vector3 mpu_msg;
-// std_msgs::Float32 hmc_msg;
-// ros::Publisher pub1("angle", &hmc_msg);
+Motor motor1(RIGHT1, LEFT1);
+Motor motor2(LEFT2, RIGHT2);
+Motor motor3(RIGHT3, LEFT3);
+Motor motor4(LEFT4, RIGHT4);
+Encoder encoder(ENCODER1A, ENCODER1B);
+void encoder1update();
+void setup()
+{
+    SerialUSB.begin(9600);
+    SerialUSB.println("start");
+    attachInterrupt(digitalPinToInterrupt(ENCODER1A), encoder1update, CHANGE);
+    attachInterrupt(digitalPinToInterrupt(ENCODER1B), encoder1update, CHANGE);
+    delay(500);
+    analogWriteResolution(16);
+    motor1.setSpeed(5000 * (10.5/11.50));
+    motor2.setSpeed(5000 * (10.5/11.00));
+    motor3.setSpeed(5000 * (10.5/10.50));
+    motor4.setSpeed(5000 * (10.5/10.75));
+    // motor1.setSpeed(5000);
+    delay(10 * 1000);
+    motor1.setSpeed(0);
+    motor2.setSpeed(0);
+    motor3.setSpeed(0);
+    motor4.setSpeed(0);
+}
 
-// // MPU6050 mpu6050(MPU_SCL, MPU_SDA);
-// HMC5883L hmc5883l(HMC_SCL, HMC_SDA);
+void encoder1update()
+{
+    encoder.encoderUpdate();
+}
 
-// void encoderUpdate();
-
-// void setup()
-// {
-//     // mag.begin();
-//     // SerialUSB.begin(57600);
-//     // nh.getHardware()->setBaud(57600);
-//     nh.initNode();
-//     nh.advertise(pub1);
-//     // mpu6050.begin();
-//     hmc5883l.begin();
-// }
-
-// void loop()
-// {
-//     hmc5883l.update();
-//     // hmc_msg.x = hmc5883l.get_x();
-//     // hmc_msg.y = hmc5883l.get_y();
-//     // hmc_msg.z = hmc5883l.get_z();
-//     // hmc_msg.data = hmc5883l.get_heading();
-//     hmc_msg.data = hmc5883l.get_heading();
-//     pub1.publish(&hmc_msg);
-//     nh.spinOnce();
-//     delay(20);
-// }
+void loop()
+{
+    SerialUSB.println(encoder.get_value());
+}
