@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 import rospy
 from geometry_msgs.msg import Twist
-from std_msgs.msg import Int16, Float32
+from std_msgs.msg import Int16
 import numpy as np
 from math import sin, cos, pi, radians
-from typing import NamedTuple
 from dataclasses import dataclass
 import time
+
 
 @dataclass
 class Position:
@@ -112,11 +112,6 @@ class Kinematics:
         self.PID()
         self.kinematics()
 
-    def cmd_vel_callback(self, twist: Twist):
-        self.x = twist.linear.x
-        self.y = twist.linear.y
-        self.theta_dot = twist.angular.z
-
     def position_callback(self, twist: Twist):
         self.angle = twist.angular.z
         self.position.x = twist.linear.x
@@ -134,12 +129,8 @@ if __name__ == '__main__':
 
     kinematics = Kinematics()
 
-    sub = rospy.Subscriber('/elephant/cmd_vel',
-                           Twist,
-                           callback=kinematics.cmd_vel_callback)
-    sub_position = rospy.Subscriber('position',
-                                    Twist,
-                                    callback=kinematics.position_callback)
+    sub = rospy.Subscriber('position', Twist,
+                           callback=kinematics.position_callback)
     pub1 = rospy.Publisher('motor1', Int16, queue_size=10)
     pub2 = rospy.Publisher('motor2', Int16, queue_size=10)
     pub3 = rospy.Publisher('motor3', Int16, queue_size=10)
@@ -148,17 +139,8 @@ if __name__ == '__main__':
     rate = rospy.Rate(50)
     while not rospy.is_shutdown():
         kinematics.update()
-        mot1 = Int16()
-        mot2 = Int16()
-        mot3 = Int16()
-        mot4 = Int16()
-        mot1.data = int(kinematics.w1)
-        mot2.data = int(kinematics.w2)
-        mot3.data = int(kinematics.w3)
-        mot4.data = int(kinematics.w4)
-        pub1.publish(mot1)
-        pub2.publish(mot2)
-        pub3.publish(mot3)
-        pub4.publish(mot4)
-        # rospy.spin()
+        pub1.publish(Int16(int(kinematics.w1)))
+        pub2.publish(Int16(int(kinematics.w2)))
+        pub3.publish(Int16(int(kinematics.w3)))
+        pub4.publish(Int16(int(kinematics.w4)))
         rate.sleep()

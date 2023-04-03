@@ -38,9 +38,7 @@ if __name__ == '__main__':
 
     ############### ROS ###############
 
-    pub = rospy.Publisher('position',
-                          Twist,
-                          queue_size=10)
+    pub = rospy.Publisher('position', Twist, queue_size=10)
     sub1 = rospy.Subscriber('motor1', Int16, motor1_callback)
     sub2 = rospy.Subscriber('motor2', Int16, motor2_callback)
     sub3 = rospy.Subscriber('motor3', Int16, motor3_callback)
@@ -56,7 +54,6 @@ if __name__ == '__main__':
 
     robot = Robot(Time, pygame.Vector2(100, 100), pygame.Color(0, 0, 255))
     robot.transform = pygame.Vector2(WIDTH//2, HEIGHT//2)
-    robot.angle = 30
 
     ############## LOOP ###############
 
