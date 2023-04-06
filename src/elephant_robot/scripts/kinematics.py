@@ -5,61 +5,7 @@ from std_msgs.msg import Int16
 import numpy as np
 from math import sin, cos, pi, radians
 from dataclasses import dataclass
-import time
-
-
-@dataclass
-class Position:
-    x: float
-    y: float
-
-
-def map_value(x: float,  in_min: float,  in_max: float,  out_min: float,  out_max: float):
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-
-
-def lerp(a: float, b: float, t: float) -> float:
-    return a + (b - a) * t
-
-
-@dataclass
-class PID:
-    kp: float
-    ki: float
-    kd: float
-    value: float = 0
-    target: float = 0
-    _i: float = 0
-    error_prev: float = 0
-    time_prev: float = time.time()
-
-    @property
-    def time_diff(self):
-        return time.time() - self.time_prev
-
-    @property
-    def error(self):
-        return self.target - self.value
-
-    @property
-    def p(self):
-        return self.kp * self.error
-
-    @property
-    def i(self):
-        self._i = self._i + self.ki * self.error
-        return self._i
-
-    @property
-    def d(self):
-        return self.kd*((self.error - self.error_prev)/self.time_diff)
-
-    @property
-    def total(self):
-        pid = self.p + self.i + self.d
-        self.error_prev = self.error
-        self.time_prev = time.time()
-        return pid
+from utils import *
 
 
 @dataclass
@@ -81,11 +27,11 @@ class Kinematics:
                     target=0)
     PID_x = PID(kp=5,
                 ki=0,
-                kd=0.5,
+                kd=1,
                 target=200)
     PID_y = PID(kp=5,
                 ki=0,
-                kd=0.5,
+                kd=1,
                 target=200)
 
     def kinematics(self):
@@ -113,9 +59,9 @@ class Kinematics:
         self.kinematics()
 
     def position_callback(self, twist: Twist):
-        self.angle = twist.angular.z
         self.position.x = twist.linear.x
         self.position.y = twist.linear.y
+        self.angle = twist.angular.z
         # if not self.angleOffset:
         #     self.angleOffset = -twist.angular.z
         # self.angle = twist.angular.z + self.angleOffset
