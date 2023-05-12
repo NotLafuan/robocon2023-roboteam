@@ -21,11 +21,13 @@ void motor1_callback(const std_msgs::Int16 &speed);
 void motor2_callback(const std_msgs::Int16 &speed);
 void motor3_callback(const std_msgs::Int16 &speed);
 void motor4_callback(const std_msgs::Int16 &speed);
+void pn_callback(const std_msgs::Int16 &UART_ONEBIT_SAMPLING_ENABLED);
 
 ros::Subscriber<std_msgs::Int16> sub1("motor1", &motor1_callback);
 ros::Subscriber<std_msgs::Int16> sub2("motor2", &motor2_callback);
 ros::Subscriber<std_msgs::Int16> sub3("motor3", &motor3_callback);
 ros::Subscriber<std_msgs::Int16> sub4("motor4", &motor4_callback);
+ros::Subscriber<std_msgs::Int16> subpn("pn", &pn_callback);
 
 ///////// ENCODER /////////
 Encoder encoder1(ENCODER1A, ENCODER1B);
@@ -57,6 +59,7 @@ void setup()
     nh.subscribe(sub2);
     nh.subscribe(sub3);
     nh.subscribe(sub4);
+    nh.subscribe(subpn);
     analogWriteResolution(16);
     // encoder
     nh.advertise(encPub1);
@@ -115,4 +118,8 @@ void encoder1Update()
 void encoder2Update()
 {
     encoder2.encoderUpdate();
+}
+void pn_callback (const std_msgs::Int16 &signal)
+{
+    digitalWrite(PN,signal.data);
 }

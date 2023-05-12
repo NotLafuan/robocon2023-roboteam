@@ -6,6 +6,7 @@
 #define RIGHT3  PE14
 #define LEFT4   PD13
 #define RIGHT4  PD14
+#define PN PD15
 
 #define ENCODER1A  PD0
 #define ENCODER1B  PD1

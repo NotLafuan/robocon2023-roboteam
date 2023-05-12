@@ -8,13 +8,15 @@ import termios
 import tty
 
 moveBindings = {
-    '': (0, 0, 0),
-    'w': (2500*4, 0, 0),
-    'a': (0, 2500*4, 0,),
-    's': (-2500*4, 0, 0),
-    'd': (0, -2500*4, 0),
-    'q': (0, 0, 2500*2),
-    'e': (0, 0, -2500*2),
+    '': (0, 0, 0, 0),
+    'w': (2500*4, 0, 0, 0),
+    'a': (0, 2500*4, 0, 0),
+    's': (-2500*4, 0, 0, 0),
+    'd': (0, -2500*4, 0, 0),
+    'q': (0, 0, 2500*2, 0),
+    'e': (0, 0, -2500*2, 0),
+    'p': (0,0,0,1),
+    'o': (0,0,0,0),
 }
 
 
@@ -43,6 +45,6 @@ if __name__ == '__main__':
             break
         twist = Twist()
         if key in moveBindings:
-            twist.linear.x, twist.linear.y, twist.angular.z = moveBindings[key]
+            twist.linear.x, twist.linear.y, twist.angular.z, twist.linear.z = moveBindings[key]
         pub.publish(twist)
         rate.sleep()
