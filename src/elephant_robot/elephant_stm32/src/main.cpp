@@ -29,17 +29,6 @@ ros::Subscriber<std_msgs::Int16> sub3("motor3", &motor3_callback);
 ros::Subscriber<std_msgs::Int16> sub4("motor4", &motor4_callback);
 ros::Subscriber<std_msgs::Int16> subpn("pn", &pn_callback);
 
-///////// ENCODER /////////
-Encoder encoder1(ENCODER1A, ENCODER1B);
-Encoder encoder2(ENCODER2A, ENCODER2B);
-
-void encoder1Update();
-void encoder2Update();
-
-std_msgs::Int16 enc_msg;
-ros::Publisher encPub1("encoder1", &enc_msg);
-ros::Publisher encPub2("encoder2", &enc_msg);
-
 ///////// COMPASS /////////
 HMC5883L hmc5883l;
 
@@ -61,13 +50,6 @@ void setup()
     nh.subscribe(sub4);
     nh.subscribe(subpn);
     analogWriteResolution(16);
-    // encoder
-    nh.advertise(encPub1);
-    nh.advertise(encPub2);
-    attachInterrupt(digitalPinToInterrupt(ENCODER1A), encoder1Update, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(ENCODER1B), encoder1Update, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(ENCODER2A), encoder2Update, CHANGE);
-    attachInterrupt(digitalPinToInterrupt(ENCODER2B), encoder2Update, CHANGE);
     // compass
     nh.advertise(anglePub);
     hmc5883l.begin();
@@ -76,12 +58,6 @@ void setup()
 void loop()
 {
     nh.spinOnce();
-
-    // encoder
-    enc_msg.data = encoder1.get_value();
-    encPub1.publish(&enc_msg);
-    enc_msg.data = encoder2.get_value();
-    encPub2.publish(&enc_msg);
     // compass
     hmc5883l.update();
     hmc_msg.data = hmc5883l.get_heading();
@@ -108,18 +84,4 @@ void motor3_callback(const std_msgs::Int16 &speed)
 void motor4_callback(const std_msgs::Int16 &speed)
 {
     motor4.setSpeed(speed.data);
-}
-
-void encoder1Update()
-{
-    encoder1.encoderUpdate();
-}
-
-void encoder2Update()
-{
-    encoder2.encoderUpdate();
-}
-void pn_callback (const std_msgs::Int16 &signal)
-{
-    digitalWrite(PN,signal.data);
 }
