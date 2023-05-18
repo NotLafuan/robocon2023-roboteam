@@ -58,7 +58,7 @@ class Kinematics:
                         cos(radians(-self.angle) + (7 * pi / 4)) * self.y +
                         R * self.theta_dot)
 
-        self.current_motor1 = lerp(self.current_motor1, w1, 1)
+        self.current_motor1 = lerp(self.current_motor1, w1, 1) 
         self.current_motor2 = lerp(self.current_motor2, w2, 1)
         self.current_motor3 = lerp(self.current_motor3, w3, 1)
         self.current_motor4 = lerp(self.current_motor4, w4, 1)
@@ -71,6 +71,7 @@ class Kinematics:
         self.y = twist.linear.y
         self.theta_dot = twist.angular.z
         self.current_pn = twist.linear.z
+        rospy.loginfo(twist.linear.z)
 
     def angle_callback(self, msg: Float32):
         if not self.angleOffset:
@@ -96,7 +97,7 @@ if __name__ == '__main__':
     pub4 = rospy.Publisher('motor4', Int16, queue_size=10)
     pub5 = rospy.Publisher('pn', Int16, queue_size=10)
 
-
+ 
     rate = rospy.Rate(50)
     while not rospy.is_shutdown():
         kinematics.motorUpdate()
@@ -105,10 +106,10 @@ if __name__ == '__main__':
         mot3 = Int16()
         mot4 = Int16()
         pn = Int16()
-        mot1.data = int(kinematics.current_motor1 * (10.5/(11.60)))
-        mot2.data = int(kinematics.current_motor2 * (10.5/(11.00)))
-        mot3.data = int(kinematics.current_motor3 * (10.5/(10.50)))
-        mot4.data = int(kinematics.current_motor4 * (10.5/(10.75)))
+        mot1.data = int(kinematics.current_motor1 )
+        mot2.data = int(kinematics.current_motor2 )
+        mot3.data = int(kinematics.current_motor3 )
+        mot4.data = int(kinematics.current_motor4 )
         pn.data = int(kinematics.current_pn) 
         pub1.publish(mot1)
         pub2.publish(mot2)

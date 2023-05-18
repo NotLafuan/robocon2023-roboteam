@@ -7,12 +7,12 @@ app = Flask(__name__)
 
 moveBindings = {
     0: (0, 0, 0),
-    ord('w'): ((2**15)/10, 0, 0),
-    ord('a'): (0, (2**15)/10, 0,),
-    ord('s'): (-(2**15)/10, 0, 0),
-    ord('d'): (0, -(2**15)/10, 0),
-    ord('q'): (0, 0, 2500*2),
-    ord('e'): (0, 0, -2500*2),
+    87: ((2**15), 0, 0),
+    65: (0, (2**15), 0,),
+    83: (-(2**15), 0, 0),
+    68: (0, -(2**15), 0),
+    81: (0, 0, 2500*2),
+    69: (0, 0, -2500*2),
 }
 
 
@@ -33,8 +33,9 @@ def mouse():
 def key():
     if request.method == 'POST':
         print(j := request.get_json())
-        twist.linear.x, twist.linear.y, twist.angular.z = moveBindings[j['key']]
-        pub.publish(twist)
+        if j['key'] in moveBindings:
+            twist.linear.x, twist.linear.y, twist.angular.z = moveBindings[j['key']]
+            pub.publish(twist)
         return 'Sucesss', 200
 
 

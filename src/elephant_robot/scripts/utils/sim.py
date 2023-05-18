@@ -42,10 +42,10 @@ class Robot:
     w2: float = 0
     w3: float = 0
     w4: float = 0
-    speed_ratio1: float = 10.5/11.60
-    speed_ratio2: float = 10.5/11.00
-    speed_ratio3: float = 10.5/10.50
-    speed_ratio4: float = 10.5/10.75
+    speed_ratio1: float =  1
+    speed_ratio2: float = 1
+    speed_ratio3: float = 1
+    speed_ratio4: float = 1
 
     @property
     def theta(self):

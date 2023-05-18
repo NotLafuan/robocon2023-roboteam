@@ -48,6 +48,7 @@ ros::Publisher anglePub("angle", &hmc_msg);
 
 void setup()
 {
+      pinMode(PC13, OUTPUT); // LED connect to pin PC13
     Wire.setSCL(SCL_PIN);
     Wire.setSDA(SDA_PIN);
     Wire.setClock(400000);
@@ -75,6 +76,10 @@ void setup()
 
 void loop()
 {
+    digitalWrite(PC13, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(100);               // wait for 100mS
+  digitalWrite(PC13, LOW);    // turn the LED off by making the voltage LOW
+  delay(100);
     nh.spinOnce();
 
     // encoder
