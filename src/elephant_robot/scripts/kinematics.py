@@ -42,11 +42,10 @@ class Kinematics:
     def kinematics(self):
         r = 1
         R = 1
-        theta = radians(-self.angle)
-        array = [[-sin(theta+(1*pi/4)), cos(theta+(1*pi/4)), 1/2*R],
-                 [-sin(theta+(3*pi/4)), cos(theta+(3*pi/4)), 1/2*R],
-                 [-sin(theta+(5*pi/4)), cos(theta+(5*pi/4)), 1/2*R],
-                 [-sin(theta+(7*pi/4)), cos(theta+(7*pi/4)), 1/2*R]]
+        array = [[-sin(self.angle+(1*pi/4)), cos(self.angle+(1*pi/4)), 1/2*R],
+                 [-sin(self.angle+(3*pi/4)), cos(self.angle+(3*pi/4)), 1/2*R],
+                 [-sin(self.angle+(5*pi/4)), cos(self.angle+(5*pi/4)), 1/2*R],
+                 [-sin(self.angle+(7*pi/4)), cos(self.angle+(7*pi/4)), 1/2*R]]
         array = np.array(array)
         self.w1, self.w2, self.w3, self.w4 = \
             (1/r)*np.matmul(array, [self.x, self.y, self.theta_dot])
