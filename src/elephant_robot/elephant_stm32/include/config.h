@@ -8,12 +8,12 @@
 #define RIGHT4  A0
 #define PN A4
 
-#define ENCODER1A  PA10
-#define ENCODER1B  PB7
-#define ENCODER2A  PB12
-#define ENCODER2B  PB13
-#define ENCODER3A  PB15
-#define ENCODER3B  PB14
+#define ENCODER1A  PB12
+#define ENCODER1B  PB13
+#define ENCODER2A  PB14
+#define ENCODER2B  PB15
+#define ENCODER3A  PA8
+#define ENCODER3B  PA9
 
 #define SCL_PIN  PB6
 #define SDA_PIN  PB7

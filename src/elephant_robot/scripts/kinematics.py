@@ -2,6 +2,8 @@
 import rospy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Int16
+from sensor_msgs.msg import Imu
+from scipy.spatial.transform import Rotation
 import numpy as np
 from math import sin, cos, pi, radians
 from dataclasses import dataclass
@@ -21,18 +23,18 @@ class Kinematics:
 
     target_angle: float = 0
 
-    PID_angle = PID(kp=20,
+    PID_angle = PID(kp=5000,
                     ki=0.01,
                     kd=5,
                     target=0)
     PID_x = PID(kp=5,
                 ki=0,
                 kd=1,
-                target=200)
+                target=0)
     PID_y = PID(kp=5,
                 ki=0,
                 kd=1,
-                target=200)
+                target=0)
 
     def kinematics(self):
         r = 1
@@ -62,11 +64,15 @@ class Kinematics:
         self.position.x = twist.linear.x
         self.position.y = twist.linear.y
         self.angle = twist.angular.z
-        # if not self.angleOffset:
-        #     self.angleOffset = -twist.angular.z
-        # self.angle = twist.angular.z + self.angleOffset
-        # self.angle = self.angle if self.angle > 0 else self.angle+360
-        # self.angle = self.angle if self.angle < 180 else self.angle-360
+
+    def imu_callback(self, imu: Imu):
+        quat = [imu.orientation.x,
+                imu.orientation.y,
+                imu.orientation.z,
+                imu.orientation.w,]
+        rot = Rotation.from_quat(quat)
+        rot_euler = rot.as_euler('xyz')
+        self.angle = rot_euler[2]
 
 
 if __name__ == '__main__':
@@ -75,8 +81,9 @@ if __name__ == '__main__':
 
     kinematics = Kinematics()
 
-    sub = rospy.Subscriber('position', Twist,
-                           callback=kinematics.position_callback)
+    sub1 = rospy.Subscriber('position', Twist,
+                            callback=kinematics.position_callback)
+    sub2 = rospy.Subscriber('/imu/data', Imu, callback=kinematics.imu_callback)
     pub1 = rospy.Publisher('motor1', Int16, queue_size=10)
     pub2 = rospy.Publisher('motor2', Int16, queue_size=10)
     pub3 = rospy.Publisher('motor3', Int16, queue_size=10)
@@ -90,3 +97,8 @@ if __name__ == '__main__':
         pub3.publish(Int16(int(kinematics.w3)))
         pub4.publish(Int16(int(kinematics.w4)))
         rate.sleep()
+        print('\r',
+              f'{kinematics.w1:5.0f}',
+              f'{kinematics.w2:5.0f}',
+              f'{kinematics.w3:5.0f}',
+              f'{kinematics.w4:5.0f}', end='', flush=True)

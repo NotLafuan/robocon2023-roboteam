@@ -1,0 +1,4 @@
+<launch>
+    <node name="simulation" pkg="elephant_robot" type="simulation.py" output="screen" />
+    <node name="kinematics" pkg="elephant_robot" type="kinematics_teleop.py" output="screen" />
+</launch>
