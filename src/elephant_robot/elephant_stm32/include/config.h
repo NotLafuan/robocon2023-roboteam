@@ -1,5 +1,5 @@
-#define LEFT1   PB1
-#define RIGHT1  PB0
+#define LEFT1   PB0
+#define RIGHT1  PB1
 #define LEFT2   A7
 #define RIGHT2  A6
 #define LEFT3   A3

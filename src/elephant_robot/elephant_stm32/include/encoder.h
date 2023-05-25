@@ -33,7 +33,9 @@ Encoder::~Encoder()
 
 int Encoder::get_value()
 {
-    return value;
+    int return_value = value;
+    value = 0;
+    return return_value;
 }
 
 void Encoder::encoderUpdate()

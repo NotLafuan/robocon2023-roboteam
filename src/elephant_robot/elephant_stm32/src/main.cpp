@@ -7,6 +7,7 @@
 #include <Adafruit_BNO055.h>
 #include <std_msgs/Int16.h>
 #include <std_msgs/Float32.h>
+#include <geometry_msgs/Pose.h>
 #include <sensor_msgs/Imu.h>
 #include <config.h>
 #include <motor.h>
@@ -39,12 +40,13 @@ void send_imu_data();
 ///////// ENCODER /////////
 Encoder encoder1(ENCODER1A, ENCODER1B);
 Encoder encoder2(ENCODER2A, ENCODER2B);
-std_msgs::Int16 enc_msg;
-ros::Publisher pub2("encoder1", &enc_msg);
-ros::Publisher pub3("encoder2", &enc_msg);
+geometry_msgs::Pose pose;
+ros::Publisher pub2("elephant_pose", &pose);
+double heading = 0;
 void encoder1Update();
 void encoder2Update();
-void send_encoder_data();
+void send_pose_data();
+double distance_per_count = 0.157; 
 
 void setup()
 {
@@ -66,7 +68,6 @@ void setup()
     delay(100);
     // encoder
     nh.advertise(pub2);
-    nh.advertise(pub3);
     attachInterrupt(digitalPinToInterrupt(ENCODER1A), encoder1Update, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ENCODER1B), encoder1Update, CHANGE);
     attachInterrupt(digitalPinToInterrupt(ENCODER2A), encoder2Update, CHANGE);
@@ -77,7 +78,7 @@ void loop()
 {
     nh.spinOnce();
     send_imu_data();
-    send_encoder_data();
+    send_pose_data();
     delay(20);
 }
 
@@ -105,6 +106,9 @@ void send_imu_data()
 {
     imu::Vector<3> acc = bno.getVector(Adafruit_BNO055::VECTOR_ACCELEROMETER);
     imu::Quaternion quat = bno.getQuat();
+    sensors_event_t orientationData;
+    bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
+    heading = orientationData.orientation.x;
 
     imu_data.linear_acceleration.x = acc.x();
     imu_data.linear_acceleration.y = acc.y();
@@ -127,10 +131,13 @@ void encoder2Update()
     encoder2.encoderUpdate();
 }
 
-void send_encoder_data()
+void send_pose_data()
 {
-    enc_msg.data = encoder1.get_value();
-    pub2.publish(&enc_msg);
-    enc_msg.data = encoder2.get_value();
-    pub3.publish(&enc_msg);
+    double encoder1_value = (double)encoder1.get_value();
+    pose.position.y += pose.position.y + encoder1_value*sin(heading*0.01745329251);
+    pose.position.x += pose.position.x + encoder1_value*cos(heading*0.01745329251);
+    // enc_msg.data = encoder1.get_value();
+    // pub2.publish(&enc_msg);
+    // enc_msg.data = encoder2.get_value();
+    // pub3.publish(&enc_msg);
 }

@@ -54,3 +54,7 @@ def map_value(x: float,  in_min: float,  in_max: float,  out_min: float,  out_ma
 
 def lerp(a: float, b: float, t: float) -> float:
     return a + (b - a) * t
+
+
+def clamp(num, min_value, max_value):
+    return max(min(num, max_value), min_value)
