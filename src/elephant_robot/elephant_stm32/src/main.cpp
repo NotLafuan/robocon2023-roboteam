@@ -38,15 +38,14 @@ ros::Publisher pub1("/imu/data", &imu_data);
 void send_imu_data();
 
 ///////// ENCODER /////////
-Encoder encoder1(ENCODER1A, ENCODER1B);
-Encoder encoder2(ENCODER2A, ENCODER2B);
+Encoder encoder1(ENCODER1A, ENCODER1B, true);
+Encoder encoder2(ENCODER2A, ENCODER2B, true);
 geometry_msgs::Pose pose;
 ros::Publisher pub2("elephant_pose", &pose);
 double heading = 0;
 void encoder1Update();
 void encoder2Update();
 void send_pose_data();
-double distance_per_count = 0.157; 
 
 void setup()
 {
@@ -108,7 +107,7 @@ void send_imu_data()
     imu::Quaternion quat = bno.getQuat();
     sensors_event_t orientationData;
     bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
-    heading = orientationData.orientation.x;
+    heading = radians(orientationData.orientation.x);
 
     imu_data.linear_acceleration.x = acc.x();
     imu_data.linear_acceleration.y = acc.y();
@@ -133,11 +132,10 @@ void encoder2Update()
 
 void send_pose_data()
 {
-    double encoder1_value = (double)encoder1.get_value();
-    pose.position.y += pose.position.y + encoder1_value*sin(heading*0.01745329251);
-    pose.position.x += pose.position.x + encoder1_value*cos(heading*0.01745329251);
-    // enc_msg.data = encoder1.get_value();
-    // pub2.publish(&enc_msg);
-    // enc_msg.data = encoder2.get_value();
-    // pub3.publish(&enc_msg);
+    double encoder1_value = encoder1.get_value();
+    double encoder2_value = encoder2.get_value();
+    
+    pose.position.x += encoder2_value;
+    pose.position.y += encoder1_value;
+    pub2.publish(&pose);
 }

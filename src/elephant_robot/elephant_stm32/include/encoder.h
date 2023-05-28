@@ -8,32 +8,41 @@ private:
     volatile int value;
     int currentState;
     int lastState;
+    double distance_per_count = 0.157;
 
 public:
-    Encoder(int, int);
+    Encoder(int, int, bool);
     ~Encoder();
-    int get_value();
+    double get_value();
     void encoderUpdate();
 };
 
-Encoder::Encoder(int pin0, int pin1)
+Encoder::Encoder(int pin0, int pin1, bool reversed = false)
 {
-    this->pin0 = pin0;
-    this->pin1 = pin1;
+    if (!reversed)
+    {
+        this->pin0 = pin0;
+        this->pin1 = pin1;
+    }
+    else
+    {
+        this->pin0 = pin1;
+        this->pin1 = pin0;
+    }
 
-    pinMode(pin0, INPUT_PULLUP);
-    pinMode(pin1, INPUT_PULLUP);
+    pinMode(this->pin0, INPUT_PULLUP);
+    pinMode(this->pin1, INPUT_PULLUP);
 
-    lastState = digitalRead(pin0);
+    lastState = digitalRead(this->pin0);
 }
 
 Encoder::~Encoder()
 {
 }
 
-int Encoder::get_value()
+double Encoder::get_value()
 {
-    int return_value = value;
+    double return_value = (double)value * distance_per_count;
     value = 0;
     return return_value;
 }
