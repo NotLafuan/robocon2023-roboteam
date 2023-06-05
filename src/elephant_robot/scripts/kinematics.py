@@ -65,8 +65,8 @@ class Kinematics:
         self.y = -self.PID_y.total
 
     def update(self):
+        self.PID_theta()
         if not self.manual_mode:
-            self.PID_theta()
             self.PID()
         self.kinematics()
 
@@ -90,7 +90,7 @@ class Kinematics:
                     imu.orientation.w,]
             rot = Rotation.from_quat(quat)
             rot_euler = rot.as_euler('xyz')
-            # self.angle = rot_euler[2]
+            self.angle = rot_euler[2]
         except ValueError:
             self.angle = 0
 

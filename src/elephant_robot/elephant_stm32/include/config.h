@@ -1,12 +1,11 @@
-#define LEFT1   PB0
-#define RIGHT1  PB1
-#define LEFT2   A7
-#define RIGHT2  A6
-#define LEFT3   A3
-#define RIGHT3  A2
-#define LEFT4   A1
-#define RIGHT4  A0
-#define PN A4
+#define LEFT1   A1
+#define RIGHT1  A0
+#define LEFT2   PB0
+#define RIGHT2  PB1
+#define LEFT3   A7
+#define RIGHT3  A6
+#define LEFT4   A3
+#define RIGHT4  A2
 
 #define ENCODER1A  PB12
 #define ENCODER1B  PB13
