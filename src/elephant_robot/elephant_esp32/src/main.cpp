@@ -30,6 +30,7 @@ void feeding();
 void lowerGripper();
 void homeLifter();
 void moveLifter(float);
+void launch();
 
 void feedingCallback(const std_msgs::Empty &msg)
 {
@@ -43,10 +44,15 @@ void moveLifterCallback(const std_msgs::Float32 &msg)
 {
   moveLifter(msg.data);
 }
+void launchCallback(const std_msgs::Empty &msg)
+{
+  launch();
+}
 
 ros::Subscriber<std_msgs::Empty> sub1("feeding", feedingCallback);
 ros::Subscriber<std_msgs::Empty> sub2("home_lifter", homeLifterCallback);
 ros::Subscriber<std_msgs::Float32> sub3("move_lifter", moveLifterCallback);
+ros::Subscriber<std_msgs::Empty> sub4("launch", launchCallback);
 
 bool dir = true;
 void setup()
@@ -61,6 +67,8 @@ void setup()
 
   // Initialize motor pins
   pinMode(DIR_PIN_MD, OUTPUT);
+  // Initialize pneumatics pins
+  pinMode(PNEUM_PIN, OUTPUT);
 
   // Set up PWM on PWM_PIN with a frequency of 1000Hz
   ledcSetup(0, 1000, 8);
@@ -166,6 +174,8 @@ void feeding()
 void launch()
 {
   digitalWrite(PNEUM_PIN, HIGH);
+  delay(1000);
+  digitalWrite(PNEUM_PIN, LOW);
 }
 
 void lowerGripper()
