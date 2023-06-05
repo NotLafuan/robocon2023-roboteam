@@ -101,10 +101,7 @@ void moveLifter(float distance_mm)
 {
   // Calculate the target position in steps
   int targetSteps = distance_mm / MM_PER_STEP;
-  if (distance_mm < 0)
-    stepper.setSpeed(-100);
-  else
-    stepper.setSpeed(100);
+  stepper.setSpeed(100);
   // Move the motor to the target position
   stepper.move(targetSteps);
 
@@ -160,7 +157,7 @@ void pushRing()
 }
 void feeding()
 {
-  moveLifter(11);
+  moveLifter(13);
   delay(500);
 
   pushRing();
