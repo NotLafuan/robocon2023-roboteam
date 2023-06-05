@@ -9,7 +9,7 @@ const int PNEUM_PIN = 16;
 const int STEP_PIN = 13;     // Step pin
 const int DIR_PIN_STEP = 12; // Direction pin
 const int STEP_LIMIT = 4;
-const float MM_PER_STEP = 1.0;
+const float MM_PER_STEP = 0.3675;
 
 // Home sequence configuration
 const int HOME_SPEED = 100;    // Speed for homing movement (steps per second)
