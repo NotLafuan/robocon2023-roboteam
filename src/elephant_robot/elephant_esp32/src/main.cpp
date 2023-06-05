@@ -78,6 +78,7 @@ void setup()
   nh.subscribe(sub1);
   nh.subscribe(sub2);
   nh.subscribe(sub3);
+  nh.subscribe(sub4);
   delay(1000);
 }
 
