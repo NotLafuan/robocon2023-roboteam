@@ -12,8 +12,9 @@ from utils import *
 
 @dataclass
 class Kinematics:
-    manual_mode = False
+    manual_mode = True
     encoder_diameter = 6.0  # m
+    speed_multiplier = 1/2
 
     angle = 0
     angleOffset = 0
@@ -64,21 +65,21 @@ class Kinematics:
         self.y = -self.PID_y.total
 
     def update(self):
-        self.PID_theta()
         if not self.manual_mode:
+            self.PID_theta()
             self.PID()
         self.kinematics()
 
-    def position_callback(self, twist: Twist):
+    def position_callback(self, pose: Pose):
         self.manual_mode = False
-        self.target_x = twist.linear.x
-        self.target_y = twist.linear.y
-        self.target_angle = twist.angular.z
+        self.target_x = pose.position.x
+        self.target_y = pose.position.y
+        self.target_angle = pose.orientation.z
 
     def cmd_vel_callback(self, twist: Twist):
         self.manual_mode = True
-        self.x = twist.linear.x
-        self.y = twist.linear.y
+        self.x = twist.linear.x * self.speed_multiplier
+        self.y = twist.linear.y * self.speed_multiplier
         self.target_angle += twist.angular.z
 
     def imu_callback(self, imu: Imu):
@@ -89,7 +90,7 @@ class Kinematics:
                     imu.orientation.w,]
             rot = Rotation.from_quat(quat)
             rot_euler = rot.as_euler('xyz')
-            self.angle = rot_euler[2]
+            # self.angle = rot_euler[2]
         except ValueError:
             self.angle = 0
 
@@ -104,7 +105,7 @@ if __name__ == '__main__':
 
     kinematics = Kinematics()
 
-    sub1 = rospy.Subscriber('position', Twist,
+    sub1 = rospy.Subscriber('position', Pose,
                             callback=kinematics.position_callback)
     sub2 = rospy.Subscriber('/elephant/cmd_vel', Twist,
                             callback=kinematics.cmd_vel_callback)
@@ -138,4 +139,5 @@ if __name__ == '__main__':
               f'{kinematics.w4:6.0f}',
               f'{kinematics.position.x:6.0f}',
               f'{kinematics.position.y:6.0f}',
-              f'{kinematics.angle:6.3f}', end='', flush=True)
+              f'{kinematics.angle:6.3f}',
+              f'{kinematics.x:6.0f}', end='', flush=True)

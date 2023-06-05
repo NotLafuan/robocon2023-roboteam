@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import rospy
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Pose
 from itertools import cycle
 
 poses = [[0, 0],
@@ -13,12 +13,12 @@ if __name__ == '__main__':
     rospy.init_node('test_node')
     rospy.loginfo('Node started')
 
-    pub = rospy.Publisher('position', Twist, queue_size=10)
+    pub = rospy.Publisher('position', Pose, queue_size=10)
 
     rate = rospy.Rate(0.25)
     while not rospy.is_shutdown():
         pos = next(pool)
-        twist = Twist()
-        twist.linear.x, twist.linear.y = pos
-        pub.publish(twist)
+        pose = Pose()
+        pose.position.x, pose.position.y = pos
+        pub.publish(pose)
         rate.sleep()

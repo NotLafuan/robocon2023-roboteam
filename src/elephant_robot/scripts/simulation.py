@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import random
 import rospy
-from geometry_msgs.msg import Twist
+from geometry_msgs.msg import Pose
 from std_msgs.msg import Int16
 
 import pygame
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     ############### ROS ###############
 
-    pub = rospy.Publisher('position', Twist, queue_size=10)
+    pub = rospy.Publisher('elephant_pose', Pose, queue_size=10)
     sub1 = rospy.Subscriber('motor1', Int16, motor1_callback)
     sub2 = rospy.Subscriber('motor2', Int16, motor2_callback)
     sub3 = rospy.Subscriber('motor3', Int16, motor3_callback)
@@ -72,10 +72,10 @@ if __name__ == '__main__':
 
         pygame.display.update()
 
-        pos = Twist()
-        pos.angular.z = robot.angle + random.uniform(-1, 1)
-        pos.linear.x = robot.transform.x + random.uniform(-1, 1)
-        pos.linear.y = robot.transform.y + random.uniform(-1, 1)
+        pos = Pose()
+        pos.orientation.z = robot.angle + random.uniform(-1, 1)
+        pos.position.x = robot.transform.x + random.uniform(-1, 1)
+        pos.position.y = robot.transform.y + random.uniform(-1, 1)
         pub.publish(pos)
 
         rate.sleep()

@@ -1,7 +1,42 @@
 <html>
-<header>
-    <!-- By the way, this is not the actual html file, just a generic example. -->
-    <script src='static/game.js'></script>
-</header>
+
+<head>
+    <title>D-pad Buttons</title>
+    <style>
+        .dpad {
+            display: flex;
+            flex-wrap: wrap;
+            width: 160px;
+        }
+
+        .button {
+            width: 50px;
+            height: 50px;
+            font-size: 16px;
+            user-select: none; /* Prevent text selection */
+        }
+
+        #up,
+        #down {
+            width: 100%;
+        }
+
+        #left,
+        #right {
+            width: 50%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dpad">
+        <button class="button" id="up">Up</button>
+        <button class="button" id="left">Left</button>
+        <button class="button" id="right">Right</button>
+        <button class="button" id="down">Down</button>
+    </div>
+</body>
+
+<script src='static/game.js'></script>
 
 </html>
