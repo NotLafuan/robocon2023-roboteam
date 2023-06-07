@@ -3,25 +3,8 @@
 #include <ros.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/Float32.h>
-// #include <ezButton.h>
-const int PNEUM_PIN = 16;
-// Pin configuration for TB6600
-const int STEP_PIN = 13;     // Step pin
-const int DIR_PIN_STEP = 12; // Direction pin
-const int STEP_LIMIT = 4;
-const float MM_PER_STEP = 0.3675;
+#include <config.h>
 
-// Home sequence configuration
-const int HOME_SPEED = 100;    // Speed for homing movement (steps per second)
-const int HOME_DIRECTION = -1; // Direction for homing movement (-1 = counterclockwise)
-
-// Pin configuration for Cytron MD13
-const int DIR_PIN_MD = 26; // Direction pin
-const int PWM_PIN = 25;    // PWM pin
-const int MAX_SPEED = 50;
-const int firstRing = 560;
-const int FEED_MIN_LIMIT = 32; // Minimum limit switch pin
-const int FEED_MAX_LIMIT = 33; // Maximum limit switch pin
 //  Define the stepper motor object
 AccelStepper stepper(AccelStepper::DRIVER, STEP_PIN, DIR_PIN_STEP);
 
