@@ -3,7 +3,12 @@
 #include <ros.h>
 #include <std_msgs/Empty.h>
 #include <std_msgs/Float32.h>
+#include <vesc_can_bus_arduino.h>
 #include <config.h>
+
+// VESC
+CAN can; 
+float rpm = 0;
 
 //  Define the stepper motor object
 AccelStepper stepper(AccelStepper::DRIVER, STEP_PIN, DIR_PIN_STEP);
@@ -31,11 +36,16 @@ void launchCallback(const std_msgs::Empty &msg)
 {
   launch();
 }
+void vescRpmCallback(const std_msgs::Float32 &msg)
+{
+  rpm = msg.data;
+}
 
 ros::Subscriber<std_msgs::Empty> sub1("feeding", feedingCallback);
 ros::Subscriber<std_msgs::Empty> sub2("home_lifter", homeLifterCallback);
 ros::Subscriber<std_msgs::Float32> sub3("move_lifter", moveLifterCallback);
 ros::Subscriber<std_msgs::Empty> sub4("launch", launchCallback);
+ros::Subscriber<std_msgs::Float32> sub5("vesc_rpm", vescRpmCallback);
 
 bool dir = true;
 void setup()
@@ -57,19 +67,26 @@ void setup()
   ledcSetup(0, 1000, 8);
   ledcAttachPin(PWM_PIN, 0);
 
+  // VESC
+  can.initialize();
+
   nh.initNode();
   nh.subscribe(sub1);
   nh.subscribe(sub2);
   nh.subscribe(sub3);
   nh.subscribe(sub4);
+  nh.subscribe(sub5);
   delay(1000);
 }
 
 void loop()
 {
   nh.spinOnce();
+  can.spin();
+  can.vesc_set_erpm(rpm);
   delay(50);
 }
+
 void homeLifter()
 {
   // Set the motor speed and direction for homing
@@ -114,6 +131,7 @@ void stopMotor()
 {
   setMotorSpeed(0);
 }
+
 void pushRing()
 {
 
@@ -139,6 +157,7 @@ void pushRing()
   }
   stopMotor();
 }
+
 void feeding()
 {
   moveLifter(13);
