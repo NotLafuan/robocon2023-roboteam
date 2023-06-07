@@ -22,6 +22,7 @@ void launch();
 
 void feedingCallback(const std_msgs::Empty &msg)
 {
+  stepper.setAcceleration(100);
   feeding();
 }
 void homeLifterCallback(const std_msgs::Empty &msg)
@@ -30,6 +31,7 @@ void homeLifterCallback(const std_msgs::Empty &msg)
 }
 void moveLifterCallback(const std_msgs::Float32 &msg)
 {
+  stepper.setAcceleration(10000);
   moveLifter(msg.data);
 }
 void launchCallback(const std_msgs::Empty &msg)
