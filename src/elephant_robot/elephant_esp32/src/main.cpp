@@ -79,13 +79,10 @@ void homeLifter()
   while (digitalRead(FEED_MIN_LIMIT) == HIGH)
   {
     stepper.runSpeed();
-    // stepper.run();
   }
 
   // Stop the motor and move a small distance away from the limit switch
   stepper.stop();
-  // Serial.println(stepper.currentPosition());
-  // stepper.move(-HOME_DIRECTION * 200);
   stepper.runToPosition();
 }
 
@@ -125,8 +122,6 @@ void pushRing()
   setMotorDirection(LOW); // Set motor direction to move towards the maximum limit switch
   while (max == HIGH)
   {
-    // FEED_MAX_LIMIT.loop();
-    // Serial.println(max);
     setMotorSpeed(MAX_SPEED); // Run the motor at maximum speed
     max = digitalRead(FEED_MAX_LIMIT);
     delay(5);
@@ -134,13 +129,10 @@ void pushRing()
 
   stopMotor();
   delay(700);
-  // Serial.println("max feed hit");
   setMotorDirection(HIGH); // Set motor direction to move towards the minimum limit switch
   min = digitalRead(FEED_MIN_LIMIT);
   while (min == HIGH)
   {
-
-    // FEED_MIN_LIMIT.loop();
     setMotorSpeed(MAX_SPEED); // Run the motor at maximum speed
     min = digitalRead(FEED_MIN_LIMIT);
     delay(5);
@@ -151,7 +143,6 @@ void feeding()
 {
   moveLifter(13);
   delay(500);
-
   pushRing();
 }
 
