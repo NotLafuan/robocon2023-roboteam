@@ -7,7 +7,7 @@
 #include <config.h>
 
 // VESC
-CAN can; 
+CAN can;
 float rpm = 0;
 
 //  Define the stepper motor object
@@ -20,9 +20,10 @@ void homeLifter();
 void moveLifter(float);
 void launch();
 
+
 void feedingCallback(const std_msgs::Empty &msg)
 {
-  stepper.setAcceleration(100);
+  stepper.setAcceleration(500);
   feeding();
 }
 void homeLifterCallback(const std_msgs::Empty &msg)
@@ -49,13 +50,14 @@ ros::Subscriber<std_msgs::Float32> sub3("move_lifter", moveLifterCallback);
 ros::Subscriber<std_msgs::Empty> sub4("launch", launchCallback);
 ros::Subscriber<std_msgs::Float32> sub5("vesc_rpm", vescRpmCallback);
 
-bool dir = true;
+void delayWithVesc(uint32_t);
+
 void setup()
 {
   pinMode(FEED_MIN_LIMIT, INPUT_PULLUP);
   pinMode(FEED_MAX_LIMIT, INPUT_PULLUP);
-  //  Set the maximum speed and acceleration for the stepper motor
 
+  //  Set the maximum speed and acceleration for the stepper motor
   stepper.setPinsInverted(true, true, false);
   stepper.setMaxSpeed(1000);
   stepper.setAcceleration(500);
@@ -78,7 +80,7 @@ void setup()
   nh.subscribe(sub3);
   nh.subscribe(sub4);
   nh.subscribe(sub5);
-  delay(1000);
+  delayWithVesc(1000);
 }
 
 void loop()
@@ -86,7 +88,16 @@ void loop()
   nh.spinOnce();
   can.spin();
   can.vesc_set_erpm(rpm);
-  delay(50);
+  delayWithVesc(50);
+}
+
+void delayWithVesc(uint32_t ms)
+{
+  long start_time = millis();
+  while ((millis() - start_time) < ms)
+  {
+    can.vesc_set_erpm(rpm);
+  }
 }
 
 void homeLifter()
@@ -95,14 +106,14 @@ void homeLifter()
   stepper.setSpeed(HOME_SPEED * HOME_DIRECTION);
 
   // Move the motor until the limit switch is triggered
-  while (digitalRead(FEED_MIN_LIMIT) == HIGH)
+  while (digitalRead(HOME_LIMIT) == LOW)
   {
     stepper.runSpeed();
   }
 
   // Stop the motor and move a small distance away from the limit switch
   stepper.stop();
-  stepper.runToPosition();
+  // stepper.runToPosition();
 }
 
 void moveLifter(float distance_mm)
@@ -115,6 +126,7 @@ void moveLifter(float distance_mm)
 
   while (stepper.distanceToGo() > 0)
   {
+    can.vesc_set_erpm(rpm);
     stepper.runSpeed();
   }
 }
@@ -144,18 +156,18 @@ void pushRing()
   {
     setMotorSpeed(MAX_SPEED); // Run the motor at maximum speed
     max = digitalRead(FEED_MAX_LIMIT);
-    delay(5);
+    delayWithVesc(5);
   }
 
   stopMotor();
-  delay(700);
+  delayWithVesc(700);
   setMotorDirection(HIGH); // Set motor direction to move towards the minimum limit switch
   min = digitalRead(FEED_MIN_LIMIT);
   while (min == HIGH)
   {
     setMotorSpeed(MAX_SPEED); // Run the motor at maximum speed
     min = digitalRead(FEED_MIN_LIMIT);
-    delay(5);
+    delayWithVesc(5);
   }
   stopMotor();
 }
@@ -163,14 +175,14 @@ void pushRing()
 void feeding()
 {
   moveLifter(13);
-  delay(500);
+  delayWithVesc(500);
   pushRing();
 }
 
 void launch()
 {
   digitalWrite(PNEUM_PIN, HIGH);
-  delay(1000);
+  delayWithVesc(1000);
   digitalWrite(PNEUM_PIN, LOW);
 }
 

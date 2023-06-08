@@ -6,6 +6,7 @@
 // Home sequence configuration
 #define HOME_SPEED 100    // Speed for homing movement (steps per second)
 #define HOME_DIRECTION -1 // Direction for homing movement (-1 = counterclockwise)
+#define HOME_LIMIT 16
 // Pin configuration for Cytron MD13
 #define DIR_PIN_MD 26 // Direction pin
 #define PWM_PIN 25    // PWM pin

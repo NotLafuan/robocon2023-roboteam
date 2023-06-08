@@ -3,6 +3,8 @@ import rospy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Empty, Float32
 from pyPS4Controller.controller import Controller
+import time
+from numpy import pi
 
 
 class MyController(Controller):
@@ -13,55 +15,90 @@ class MyController(Controller):
         self.y = 0
         self.z = 0
 
+    ########## MOVEMENT TRANSLATIONAL ##########
+
     def on_L3_up(self, value):
         self.y = -value
-        self.publish()
+        self.publish_movement()
 
     def on_L3_down(self, value):
         self.y = -value
-        self.publish()
+        self.publish_movement()
 
     def on_L3_right(self, value):
         self.x = value
-        self.publish()
+        self.publish_movement()
 
     def on_L3_left(self, value):
         self.x = value
-        self.publish()
+        self.publish_movement()
 
     def on_L3_x_at_rest(self):
         self.x = 0
-        self.publish()
+        self.publish_movement()
 
     def on_L3_y_at_rest(self):
         self.y = 0
-        self.publish()
+        self.publish_movement()
+
+    ########### MOVEMENT ROTATIONAL ############
 
     def on_R3_left(self, value):
         self.z = (value/32768)*0.01
-        self.publish()
+        self.publish_movement()
 
     def on_R3_right(self, value):
         self.z = (value/32768)*0.01
-        self.publish()
+        self.publish_movement()
 
     def on_R3_x_at_rest(self):
         self.z = 0
-        self.publish()
+        self.publish_movement()
 
     def on_R3_down(self, _):
-        self.publish()
+        self.publish_movement()
 
     def on_R3_up(self, _):
-        self.publish()
+        self.publish_movement()
 
     def on_R3_y_at_rest(self):
-        self.publish()
+        self.publish_movement()
 
-    def on_L1_press(self):
+    ############### ANGLE CHANGE ###############
+
+    def on_left_arrow_press(self):
+        self.z = pi/2
+        self.publish_movement()
+
+    def on_right_arrow_press(self):
+        self.z = -pi/2
+        self.publish_movement()
+
+    ################## SHOOT ###################
+
+    # feeding
+    def on_R1_press(self):
         pub2.publish(Empty())
+        
+    
+    def on_L1_press(self):
+        pub5.publish(Empty())
+    
+    ############# SPEED ADJUSMENTS #############
 
-    def publish(self):
+    def on_x_press(self):
+        pub6.publish(Float32(10000))
+    
+    def on_square_press(self):
+        pub6.publish(Float32(15000))
+    
+    def on_circle_press(self):
+        pub6.publish(Float32(20000))
+
+    def on_triangle_press(self):
+        pub6.publish(Float32(25000))
+
+    def publish_movement(self):
         twist = Twist()
         twist.linear.x = self.x
         twist.linear.y = self.y
@@ -79,6 +116,8 @@ if __name__ == '__main__':
     pub2 = rospy.Publisher('feeding', Empty, queue_size=10)
     pub3 = rospy.Publisher('home_lifter', Empty, queue_size=10)
     pub4 = rospy.Publisher('move_lifter', Float32, queue_size=10)
+    pub5 = rospy.Publisher('launch', Empty, queue_size=10)
+    pub6 = rospy.Publisher('vesc_rpm', Float32, queue_size=10)
 
     controller = MyController(
         interface="/dev/input/js0", connecting_using_ds4drv=False)
