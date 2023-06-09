@@ -43,35 +43,43 @@ class MyController(Controller):
 
     ########### MOVEMENT ROTATIONAL ############
 
-    def on_R3_left(self, value):
-        self.z = (value/32768)*0.01
-        self.publish_movement()
+    # def on_R3_left(self, value):
+    #     self.z = (value/32768)*0.01
+    #     self.publish_movement()
 
-    def on_R3_right(self, value):
-        self.z = (value/32768)*0.01
-        self.publish_movement()
+    # def on_R3_right(self, value):
+    #     self.z = (value/32768)*0.01
+    #     self.publish_movement()
 
-    def on_R3_x_at_rest(self):
-        self.z = 0
-        self.publish_movement()
+    # def on_R3_x_at_rest(self):
+    #     self.z = 0
+    #     self.publish_movement()
 
-    def on_R3_down(self, _):
-        self.publish_movement()
+    # def on_R3_down(self, _):
+    #     self.publish_movement()
 
-    def on_R3_up(self, _):
-        self.publish_movement()
+    # def on_R3_up(self, _):
+    #     self.publish_movement()
 
-    def on_R3_y_at_rest(self):
-        self.publish_movement()
+    # def on_R3_y_at_rest(self):
+    #     self.publish_movement()
 
     ############### ANGLE CHANGE ###############
 
     def on_left_arrow_press(self):
-        self.z = pi/2
+        self.z -= pi/2
+        if self.z >= pi/2:
+            self.z = pi/2
+        elif self.z <= -pi/2:
+            self.z = -pi/2
         self.publish_movement()
 
     def on_right_arrow_press(self):
-        self.z = -pi/2
+        self.z += pi/2
+        if self.z >= pi/2:
+            self.z = pi/2
+        elif self.z <= -pi/2:
+            self.z = -pi/2
         self.publish_movement()
 
     ################## SHOOT ###################
@@ -79,24 +87,31 @@ class MyController(Controller):
     # feeding
     def on_R1_press(self):
         pub2.publish(Empty())
-        
-    
+
     def on_L1_press(self):
         pub5.publish(Empty())
-    
+
     ############# SPEED ADJUSMENTS #############
 
     def on_x_press(self):
-        pub6.publish(Float32(10000))
-    
+        pub6.publish(Float32(8000))
+
     def on_square_press(self):
-        pub6.publish(Float32(15000))
-    
+        pub6.publish(Float32(11600))
+
     def on_circle_press(self):
         pub6.publish(Float32(20000))
 
     def on_triangle_press(self):
         pub6.publish(Float32(25000))
+
+    ############## FEEDER CONTROL ##############
+
+    def on_up_arrow_press(self):
+        pub4.publish(Float32(180))
+
+    def on_down_arrow_press(self):
+        pub3.publish(Empty())
 
     def publish_movement(self):
         twist = Twist()

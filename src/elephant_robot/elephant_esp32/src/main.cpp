@@ -56,6 +56,7 @@ void setup()
 {
   pinMode(FEED_MIN_LIMIT, INPUT_PULLUP);
   pinMode(FEED_MAX_LIMIT, INPUT_PULLUP);
+  pinMode(HOME_LIMIT, INPUT_PULLUP);
 
   //  Set the maximum speed and acceleration for the stepper motor
   stepper.setPinsInverted(true, true, false);
@@ -106,14 +107,16 @@ void homeLifter()
   stepper.setSpeed(HOME_SPEED * HOME_DIRECTION);
 
   // Move the motor until the limit switch is triggered
-  while (digitalRead(HOME_LIMIT) == LOW)
+  while (digitalRead(HOME_LIMIT) == HIGH)
   {
     stepper.runSpeed();
   }
-
-  // Stop the motor and move a small distance away from the limit switch
-  stepper.stop();
-  // stepper.runToPosition();
+  // Add a little more to reach floor
+  long start_time = millis();
+  while ((millis() - start_time) < 100)
+  {
+    stepper.runSpeed();
+  }
 }
 
 void moveLifter(float distance_mm)

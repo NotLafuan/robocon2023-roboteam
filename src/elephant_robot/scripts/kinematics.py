@@ -80,7 +80,7 @@ class Kinematics:
         self.manual_mode = True
         self.x = twist.linear.x * self.speed_multiplier
         self.y = twist.linear.y * self.speed_multiplier
-        self.target_angle += twist.angular.z
+        self.target_angle = twist.angular.z
 
     def imu_callback(self, imu: Imu):
         try:
