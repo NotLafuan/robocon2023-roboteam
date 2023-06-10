@@ -1,10 +1,10 @@
 #include <Arduino.h>
-#include <AccelStepper.h>
+// #include <AccelStepper.h>
 #define USE_USBCON
 #include <config.h>
 #include <motor.h>
 #include <encoder.h>
-#include <WiFi.h>
+// #include <WiFi.h>
 
 const char* ssid = "22 Ground Floor 2.4Ghz";
 const char* password = "1234abcd";
@@ -29,13 +29,13 @@ void setup()
   pinMode(FEED_MIN_LIMIT, INPUT_PULLUP);
   pinMode(FEED_MAX_LIMIT, INPUT_PULLUP);
   Serial.begin(9600);
-  // analogWriteResolution(16);
+  analogWriteResolution(16);
 
-    WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi...");
-  }
+  //   WiFi.begin(ssid, password);
+  // while (WiFi.status() != WL_CONNECTED) {
+  //   delay(1000);
+  //   Serial.println("Connecting to WiFi...");
+  // }
 
   Serial.println("Connected to WiFi!");
 
@@ -47,10 +47,6 @@ void setup()
 
 void loop()
 {
-  digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000);  
   Serial.print("Encoder 1 = ");
   double ENC1_Value = encoder1.get_value();
   ENC1_Value = ENC1_Value * (1 / 1200) * 6000 * (millis() - prevT);
@@ -58,7 +54,7 @@ void loop()
   int motorspeed1 = targetRPM - ENC1_Value;
   motor1.setSpeed(motorspeed1);
 
-  Serial.println("\t");
+  Serial.print("\t");
 
   Serial.print("Encoder 2 = ");
   double ENC2_Value = encoder2.get_value();
@@ -69,7 +65,7 @@ void loop()
   Serial.println("\t");
   prevT = millis();
 
-  delay(1000);
+  delay(20);
 }
 
 void encoder1Update()
