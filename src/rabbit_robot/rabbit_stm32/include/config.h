@@ -1,19 +1,22 @@
-#define LEFT1   14
-#define RIGHT1  27
-#define LEFT2   32
-#define RIGHT2  33
-#define LEFT3   25
-#define RIGHT3  26
-#define LED_BUILTIN 2
+#define LEFT1   PB1
+#define RIGHT1  PB0
+#define LEFT2   A3
+#define RIGHT2  A2
+#define LEFT3   A7
+#define RIGHT3  A6
+#define LED_BUILTIN PC13
 
-#define ENCODER1A  PB0
-#define ENCODER1B  PB1
-#define ENCODER2A  PB2
-#define ENCODER2B  PB3
+#define ENCODER1A  PB13
+#define ENCODER1B  PB12
+#define ENCODER2A  PB14
+#define ENCODER2B  PB15
 
-#define FEED_MIN_LIMIT 23 // Minimum limit switch pin
-#define FEED_MAX_LIMIT 22 // Maximum limit switch pin
+#define FEED_MIN_LIMIT PB6 // Minimum limit switch pin
+#define FEED_MAX_LIMIT PB7 // Maximum limit switch pin
+//Stepper Pin//
+#define STEP_PIN PA10   // Step pin
+#define DIR_PIN_STEP PA11 // Direction pin
 
 #define MAX_SPEED 6425
-#define PNEUM_PIN 21
+#define PNEUM_PIN PB4
 
