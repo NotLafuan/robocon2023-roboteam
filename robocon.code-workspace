@@ -14,10 +14,6 @@
 		{
 			"name": "elephant_esp32",
 			"path": "src/elephant_robot/elephant_esp32"
-		},
-		{
-			"name": "rabbit_esp32",
-			"path": "src/rabbit_robot/rabbit_esp32"
 		}
 	],
 	"settings": {
