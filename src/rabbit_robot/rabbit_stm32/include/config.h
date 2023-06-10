@@ -11,11 +11,11 @@
 #define ENCODER2A  PB14
 #define ENCODER2B  PB15
 
-#define FEED_MIN_LIMIT PB6 // Minimum limit switch pin
-#define FEED_MAX_LIMIT PB7 // Maximum limit switch pin
+#define FEED_MIN_LIMIT PB8 // Minimum limit switch pin
+#define FEED_MAX_LIMIT PB9 // Maximum limit switch pin
 //Stepper Pin//
-#define STEP_PIN PA10   // Step pin
-#define DIR_PIN_STEP PA11 // Direction pin
+#define STEP_PIN A0  // Step pin
+#define DIR_PIN_STEP A1 // Direction pin
 
 #define MAX_SPEED 6425
 #define PNEUM_PIN PB4
