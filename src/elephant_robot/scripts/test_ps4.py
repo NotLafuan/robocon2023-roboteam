@@ -117,7 +117,7 @@ class MyController(Controller):
     ############## FEEDER CONTROL ##############
 
     def on_up_arrow_press(self):
-        pub4.publish(Float32(180))
+        pub4.publish(Float32(174))
 
     def on_down_arrow_press(self):
         pub3.publish(Empty())

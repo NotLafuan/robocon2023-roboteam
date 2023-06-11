@@ -20,7 +20,6 @@ void homeLifter();
 void moveLifter(float);
 void launch();
 
-
 void feedingCallback(const std_msgs::Empty &msg)
 {
   stepper.setAcceleration(500);
@@ -28,6 +27,7 @@ void feedingCallback(const std_msgs::Empty &msg)
 }
 void homeLifterCallback(const std_msgs::Empty &msg)
 {
+  stepper.setAcceleration(10000);
   homeLifter();
 }
 void moveLifterCallback(const std_msgs::Float32 &msg)
@@ -123,15 +123,24 @@ void moveLifter(float distance_mm)
 {
   // Calculate the target position in steps
   int targetSteps = distance_mm / MM_PER_STEP;
-  stepper.setSpeed(100);
+  if (targetSteps < 0)
+    stepper.setSpeed(-100);
+  else
+    stepper.setSpeed(100);
   // Move the motor to the target position
   stepper.move(targetSteps);
-
-  while (stepper.distanceToGo() > 0)
-  {
-    can.vesc_set_erpm(rpm);
-    stepper.runSpeed();
-  }
+  if (targetSteps < 0)
+    while (stepper.distanceToGo() < 0)
+    {
+      can.vesc_set_erpm(rpm);
+      stepper.runSpeed();
+    }
+  else
+    while (stepper.distanceToGo() > 0)
+    {
+      can.vesc_set_erpm(rpm);
+      stepper.runSpeed();
+    }
 }
 
 void setMotorDirection(bool direction)
@@ -163,6 +172,7 @@ void pushRing()
   }
 
   stopMotor();
+  moveLifter(-10);
   delayWithVesc(700);
   setMotorDirection(HIGH); // Set motor direction to move towards the minimum limit switch
   min = digitalRead(FEED_MIN_LIMIT);
@@ -173,11 +183,12 @@ void pushRing()
     delayWithVesc(5);
   }
   stopMotor();
+  moveLifter(10);
 }
 
 void feeding()
 {
-  moveLifter(13);
+  moveLifter(12.5);
   delayWithVesc(500);
   pushRing();
 }

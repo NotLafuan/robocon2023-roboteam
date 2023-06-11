@@ -3,7 +3,6 @@ import rospy
 from geometry_msgs.msg import Twist
 from std_msgs.msg import Empty, Float32
 from pyPS4Controller.controller import Controller
-import time
 from numpy import pi
 
 
@@ -86,39 +85,39 @@ class MyController(Controller):
 
     # feeding
     def on_R1_press(self):
-        pub2.publish(Empty())
+        pub_feed.publish(Empty())
 
     def on_L1_press(self):
-        pub5.publish(Empty())
+        pub_lauch.publish(Empty())
 
     ############# SPEED ADJUSMENTS #############
 
     def on_x_press(self):
-        pub6.publish(Float32(8000))
+        pub_rpm.publish(Float32(8000))
 
     def on_square_press(self):
-        pub6.publish(Float32(11600))
+        pub_rpm.publish(Float32(12800))
 
     def on_circle_press(self):
-        pub6.publish(Float32(20000))
+        pub_rpm.publish(Float32(16700))
 
     def on_triangle_press(self):
-        pub6.publish(Float32(25000))
+        pub_rpm.publish(Float32(17600))
 
     ############## FEEDER CONTROL ##############
 
     def on_up_arrow_press(self):
-        pub4.publish(Float32(180))
+        pub_move.publish(Float32(174))
 
     def on_down_arrow_press(self):
-        pub3.publish(Empty())
+        pub_home.publish(Empty())
 
     def publish_movement(self):
         twist = Twist()
         twist.linear.x = self.x
         twist.linear.y = self.y
         twist.angular.z = self.z
-        pub1.publish(twist)
+        pub_vel.publish(twist)
         print('\r',
               f'{self.x:6.0f}',
               f'{self.y:6.0f}', end='', flush=True)
@@ -127,12 +126,12 @@ class MyController(Controller):
 if __name__ == '__main__':
     rospy.init_node('ps4_teleop')
     rospy.loginfo('Node started')
-    pub1 = rospy.Publisher('/elephant/cmd_vel', Twist, queue_size=10)
-    pub2 = rospy.Publisher('feeding', Empty, queue_size=10)
-    pub3 = rospy.Publisher('home_lifter', Empty, queue_size=10)
-    pub4 = rospy.Publisher('move_lifter', Float32, queue_size=10)
-    pub5 = rospy.Publisher('launch', Empty, queue_size=10)
-    pub6 = rospy.Publisher('vesc_rpm', Float32, queue_size=10)
+    pub_vel = rospy.Publisher('/elephant/cmd_vel', Twist, queue_size=10)
+    pub_feed = rospy.Publisher('feeding', Empty, queue_size=10)
+    pub_home = rospy.Publisher('home_lifter', Empty, queue_size=10)
+    pub_move = rospy.Publisher('move_lifter', Float32, queue_size=10)
+    pub_lauch = rospy.Publisher('launch', Empty, queue_size=10)
+    pub_rpm = rospy.Publisher('vesc_rpm', Float32, queue_size=10)
 
     controller = MyController(
         interface="/dev/input/js0", connecting_using_ds4drv=False)

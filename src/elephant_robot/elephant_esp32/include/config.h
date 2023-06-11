@@ -2,7 +2,8 @@
 // Pin configuration for TB6600
 #define STEP_PIN 13     // Step pin
 #define DIR_PIN_STEP 12 // Direction pin
-#define MM_PER_STEP 0.3675
+// #define MM_PER_STEP 0.3675
+#define MM_PER_STEP 0.3525
 // Home sequence configuration
 #define HOME_SPEED 100    // Speed for homing movement (steps per second)
 #define HOME_DIRECTION -1 // Direction for homing movement (-1 = counterclockwise)
