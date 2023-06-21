@@ -160,11 +160,11 @@ void stopMotor()
 
 void pushRing()
 {
-
   int max = digitalRead(FEED_MAX_LIMIT);
   int min = digitalRead(FEED_MIN_LIMIT);
   setMotorDirection(LOW); // Set motor direction to move towards the maximum limit switch
-  while (max == HIGH)
+  long start_time = millis();
+  while (max == HIGH && (millis() - start_time) < 4000)
   {
     setMotorSpeed(MAX_SPEED); // Run the motor at maximum speed
     max = digitalRead(FEED_MAX_LIMIT);
@@ -176,7 +176,8 @@ void pushRing()
   delayWithVesc(700);
   setMotorDirection(HIGH); // Set motor direction to move towards the minimum limit switch
   min = digitalRead(FEED_MIN_LIMIT);
-  while (min == HIGH)
+  start_time = millis();
+  while (min == HIGH && (millis() - start_time) < 4000)
   {
     setMotorSpeed(MAX_SPEED); // Run the motor at maximum speed
     min = digitalRead(FEED_MIN_LIMIT);

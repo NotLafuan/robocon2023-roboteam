@@ -11,6 +11,6 @@
 // Pin configuration for Cytron MD13
 #define DIR_PIN_MD 26 // Direction pin
 #define PWM_PIN 25    // PWM pin
-#define MAX_SPEED 50
+#define MAX_SPEED 20
 #define FEED_MIN_LIMIT 32 // Minimum limit switch pin
 #define FEED_MAX_LIMIT 33 // Maximum limit switch pin

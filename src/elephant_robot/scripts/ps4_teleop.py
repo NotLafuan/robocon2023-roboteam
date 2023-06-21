@@ -96,7 +96,7 @@ class MyController(Controller):
         pub_rpm.publish(Float32(8000))
 
     def on_square_press(self):
-        pub_rpm.publish(Float32(12800))
+        pub_rpm.publish(Float32(12300))
 
     def on_circle_press(self):
         pub_rpm.publish(Float32(16700))
@@ -107,10 +107,16 @@ class MyController(Controller):
     ############## FEEDER CONTROL ##############
 
     def on_up_arrow_press(self):
-        pub_move.publish(Float32(174))
+        pub_move.publish(Float32(173))
 
     def on_down_arrow_press(self):
         pub_home.publish(Empty())
+
+    def on_share_press(self):
+        pub_move.publish(Float32(-12.5))
+
+    def on_options_press(self):
+        pub_move.publish(Float32(12.5))
 
     def publish_movement(self):
         twist = Twist()

@@ -99,7 +99,7 @@ class MyController(Controller):
         pub6.publish(Float32(self.rpm))
 
     def on_square_press(self):
-        self.rpm = 11600
+        self.rpm = 12300
         pub6.publish(Float32(self.rpm))
 
     def on_circle_press(self):
